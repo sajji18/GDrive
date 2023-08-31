@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'home.apps.HomeConfig',
+    'iitr_drive.apps.IitrDriveConfig',
     'crispy_forms',
 ]
 

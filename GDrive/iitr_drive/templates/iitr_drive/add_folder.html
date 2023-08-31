@@ -1,0 +1,30 @@
+{% extends 'home/layout/layout.html' %}
+
+{% block content %}
+  <div class="modal-body">
+    <form action="{% url 'add_folder' %}" method="POST">
+    {% csrf_token %}
+      <div class="mb-3">
+        <label for="exampleFormControlInput1" class="form-label"
+          >Folder Name
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          id="exampleFormControlInput1"
+          name="name"
+        />
+        <label for="exampleFormControlInput1" class="form-label"
+          >Folder Description
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          id="exampleFormControlInput1"
+          name="description"
+        />
+        <button class="btn btn-outline-success my-3">Create Folder</button>
+      </div>
+    </form>
+  </div>
+{% endblock %}

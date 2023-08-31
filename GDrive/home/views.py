@@ -1,11 +1,14 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
+from iitr_drive import models
 
 # Create your views here.
 def home(request):
-    return render(request,'home/home.html')
-
+    context = {
+        'folders': models.Folder.objects.all()
+    }
+    return render(request, 'iitr_drive/folders.html', context)
 
 def register(request):
     if request.method == 'POST': 
