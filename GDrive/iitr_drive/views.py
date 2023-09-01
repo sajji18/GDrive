@@ -35,8 +35,8 @@ def folder_detail(request, folderid):
 def add_folder(request):
     if request.method == 'POST':
         form = FolderForm(request.POST)
-        
-        if form.is_valid() and is_exist == False:
+          
+        if form.is_valid():
             folder = form.save(commit=False)
             folder.owner = request.user
             folder.save()
