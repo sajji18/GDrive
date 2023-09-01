@@ -10,7 +10,7 @@
                 <h5 class="card-title">{{folder.name}}</h5>
                 <h6 class="card-subtitle mb-2 text-body-secondary">By {{folder.owner}}</h6>
                 <p class="card-text">{{folder.description}}</p>
-                <a href="{}" class="card-link">Open Folder</a>
+                <a href="{% url 'folder' folderid=folder.id %}" class="card-link" target="_blank">Open Folder</a>
               </div>
             </div>
           {% endfor %}

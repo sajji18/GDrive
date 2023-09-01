@@ -1,0 +1,86 @@
+{% extends "home/layout/layout.html" %}
+{% block body %}
+<div style="display: flex; justify-content: space-between; padding: 5px 10px">
+    <div class="">
+      <div class="container py-3">
+        <div class="row">
+          <!--  -->
+          {% for i in files %}
+          <div class="col-sm">
+            <div class="card" style="width: 18rem">
+              <div class="card-body">
+                <h5 class="card-title">{{i.filetitle}}</h5>
+                <a href="{{i.file.url}}" download="{{i.file}}" class="btn btn-outline-primary">Download</a>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+          <!--  -->
+        </div>
+      </div>
+    </div>
+    <div class="">
+      <!-- Button trigger modal -->
+      <button
+        type="button"
+        class="btn btn-outline-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#exampleModal"
+      >
+        Upload
+      </button>
+  
+      <!-- Modal -->
+      <div
+        class="modal fade"
+        id="exampleModal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Upload</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <form action="{% url 'folder' folderid %}" method="POST" enctype="multipart/form-data">
+              {% csrf_token %}
+                <div class="mb-3">
+                  <label for="exampleFormControlInput1" class="form-label"
+                    >File Name</label
+                  >
+                  <input
+                    type="file"
+                    class="form-control"
+                    id="exampleFormControlInput1"
+                    name="file"
+                  />
+                  <label for="exampleFormControlInput1" class="form-label"
+                    >File Title</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="exampleFormControlInput1"
+                    name="filetitle"
+                  />
+                  <button class="btn btn-outline-success my-3">
+                    Upload File
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  {% endblock body %}
