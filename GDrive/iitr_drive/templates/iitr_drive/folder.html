@@ -1,20 +1,25 @@
 {% extends "home/layout/layout.html" %}
 {% block content %}
-<div style="display: flex; justify-content: space-between; padding: 5px 10px">
+<div style="display: flex; justify-content: space-between; padding: 5px 10px;">
     <div class="">
       <div class="container py-3">
         <div class="row">
           <!--  -->
-          {% for i in files %}
-          <div class="col-sm">
-            <div class="card" style="width: 18rem">
-              <div class="card-body">
-                <h5 class="card-title">{{i.filetitle}}</h5>
-                <a href="{{i.file.url}}" download="{{i.file}}" class="btn btn-outline-primary">Download</a>
+          {% if files %}
+            {% for i in files %}
+            <div class="col-sm mb-3">
+              <div class="card" style="width: 18rem">
+                <div class="card-body">
+                  <h5 class="card-title">{{i.filetitle}}</h5>
+                  <a href="{{i.file.url}}" download="{{i.file}}" class="btn btn-outline-primary mr-2">Download</a>
+                  <a href="#" class="btn btn-outline-primary">Share</a>
+                </div>
               </div>
             </div>
-          </div>
-          {% endfor %}
+            {% endfor %}
+          {% else %}
+            <h2>No Files Yet</h2>
+          {% endif %}
           <!--  -->
         </div>
       </div>
@@ -54,7 +59,7 @@
               {% csrf_token %}
                 <div class="mb-3">
                   <label for="exampleFormControlInput1" class="form-label"
-                    >File Name</label
+                    >Name</label
                   >
                   <input
                     type="file"
@@ -63,7 +68,7 @@
                     name="file"
                   />
                   <label for="exampleFormControlInput1" class="form-label"
-                    >File Title</label
+                    >Title</label
                   >
                   <input
                     type="text"
@@ -72,7 +77,7 @@
                     name="filetitle"
                   />
                   <button class="btn btn-outline-success my-3">
-                    Upload File
+                    Upload
                   </button>
                 </div>
               </form>

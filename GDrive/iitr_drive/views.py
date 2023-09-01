@@ -12,7 +12,7 @@ def folder_list(request):
 
 def folder_detail(request, folderid):
     if request.user.is_authenticated:
-        folder_user = Folder.objects.get(id=folderid)
+        folder_user = get_object_or_404(Folder, id=folderid)
         files = File.objects.filter(folder=folder_user)
         context = {'folderid':folderid,'files':files}
         
