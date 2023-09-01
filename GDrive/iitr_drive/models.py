@@ -9,4 +9,14 @@ class Folder(models.Model): # model to represent folders by users
     description = models.TextField(default="Add Description")
     
     def __str__(self):
-        return f'{self.name} | {self.owner}'
+        return f'{self.name} (Owner: {self.owner.username})'
+
+    
+class File(models.Model):
+    filetitle = models.CharField(max_length=55)
+    folder = models.ForeignKey(Folder, on_delete=models.CASCADE)
+    file = models.FileField(upload_to="Files")
+    
+    def __str__(self):
+        return f'{self.filetitle} in {self.folder}'
+

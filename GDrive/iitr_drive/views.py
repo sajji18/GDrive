@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import FolderForm
-from .models import Folder
+from .models import Folder, File
 from django.urls import reverse
 
 def folder_list(request):
@@ -12,8 +12,15 @@ def folder_list(request):
 
 def folder_detail(request, folderid):
     if request.user.is_authenticated:
-        folder = get_object_or_404(Folder, id=folderid)
-        context = {'folder': folder}
+        folder_user = Folder.objects.get(id=folderid)
+        files = File.objects.filter(folder=folder_user)
+        context = {'folderid':folderid,'files':files}
+        
+        if request.method == 'POST':
+            file_user = request.FILES.get('file')
+            file_title = request.POST.get('filetitle')
+            fileadd = File.objects.create(filetitle=file_title,file=file_user,folder=folder_user)
+
         return render(request, 'iitr_drive/folder.html', context)
     else:
         return redirect('login')
