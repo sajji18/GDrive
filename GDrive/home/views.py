@@ -5,8 +5,12 @@ from iitr_drive import models as drive_models
 
 # Create your views here.
 def home(request):
+    current_user = request.user
+    folders = drive_models.Folder.objects.filter(owner=current_user, linked_in=-1)
+
     context = {
-        'folders': drive_models.Folder.objects.all()
+        'folders': folders,
+        'parent_id': -1
     }
     return render(request, 'iitr_drive/folder_list.html', context)
 

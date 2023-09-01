@@ -1,11 +1,17 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import FolderForm
+from django.contrib.auth.decorators import login_required
 from .models import Folder, File
 from django.urls import reverse
 
+@login_required
 def folder_list(request):
+    current_user = request.user
+    folders = Folder.objects.filter(owner=current_user, linked_in=-1)
+
     context = {
-        'folders': Folder.objects.all()
+        'folders': folders,
+        'parent_id': -1
     }
     return render(request, 'iitr_drive/folder_list.html', context)
 
@@ -29,7 +35,8 @@ def folder_detail(request, folderid):
 def add_folder(request):
     if request.method == 'POST':
         form = FolderForm(request.POST)
-        if form.is_valid():
+        
+        if form.is_valid() and is_exist == False:
             folder = form.save(commit=False)
             folder.owner = request.user
             folder.save()
