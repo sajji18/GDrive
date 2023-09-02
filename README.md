@@ -14,6 +14,7 @@ Install Required Packages and Modules
 ```
 pip install django
 pip install bootstrap4
+pip install qrcode[pil]
 ```
 Activate the Virtual Environment ('/' if on Command Prompt)
 ```
