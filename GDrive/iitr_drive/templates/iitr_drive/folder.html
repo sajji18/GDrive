@@ -1,4 +1,5 @@
 {% extends "home/layout/layout.html" %}
+{% load static %}
 {% block content %}
 <div style="display: flex; justify-content: space-between; padding: 5px 10px">
     <div class="">
@@ -7,10 +8,13 @@
           <!--  -->
           {% for i in files %}
           <div class="col-sm">
-            <div class="card" style="width: 18rem">
+            <div class="card mb-3" style="width: 18rem">
               <div class="card-body">
-                <h5 class="card-title">{{i.filetitle}}</h5>
-                <a href="{{i.file.url}}" download="{{i.file}}" class="btn btn-outline-primary">Download</a>
+                <h4 class="card-title">{{i.filetitle}}</h4>
+                <a href="{{i.file.url}}" download="{{i.file}}" class="btn btn-outline-primary mr-2">Download</a>
+                <button class="btn btn-outline-primary qr-trigger" data-qrdata="{{ i.url }}" data-fileid="{{ i.id }}">QR Code</button>
+                <div class="qr-tooltip" id="qr-tooltip"></div>
+                {% comment %} <img src="{% url 'generate_qr_code' i.id %}" alt="QR Code for {{ i.name }}"> {% endcomment %}
               </div>
             </div>
           </div>
@@ -82,5 +86,8 @@
       </div>
     </div>
   </div>
-  
   {% endblock content %}
+  {% block body %}
+    <script src="{% static 'iitr_drive/script.js' %}"></script>  
+  {% endblock body %}
+    

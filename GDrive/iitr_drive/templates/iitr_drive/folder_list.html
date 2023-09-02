@@ -1,11 +1,12 @@
 {% extends "home/layout/layout.html" %}
 {% block content %}
-<div style="display: flex; padding: 10px 20px; justify-content: space-between">
+<h1>Folders</h1>
+<div style="display: flex; padding: 10px 10px; justify-content: space-between">
     <div class="">
       <div class="container py-3">
         <div class="row">
           {% for folder in folders %}
-            <div class="card" style="width: 18rem;">
+            <div class="card mb-4 mr-4" style="width: 18rem;">
               <div class="card-body">
                 <h5 class="card-title">{{folder.name}}</h5>
                 <h6 class="card-subtitle mb-2 text-body-secondary">By {{folder.owner}}</h6>
