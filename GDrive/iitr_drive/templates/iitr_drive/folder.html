@@ -6,19 +6,25 @@
       <div class="container py-3">
         <div class="row">
           <!--  -->
-          {% for i in files %}
-          <div class="col-sm">
-            <div class="card mb-3" style="width: 18rem">
-              <div class="card-body">
-                <h4 class="card-title">{{i.filetitle}}</h4>
-                <a href="{{i.file.url}}" download="{{i.file}}" class="btn btn-outline-primary mr-2">Download</a>
-                <button class="btn btn-outline-primary qr-trigger" data-qrdata="{{ i.url }}" data-fileid="{{ i.id }}">QR Code</button>
-                <div class="qr-tooltip" id="qr-tooltip"></div>
-                {% comment %} <img src="{% url 'generate_qr_code' i.id %}" alt="QR Code for {{ i.name }}"> {% endcomment %}
+          {% if files %}
+            {% for i in files %}
+            <div class="col-sm">
+              <div class="card mb-3" style="width: 18rem">
+                <div class="card-body">
+                  <h4 class="card-title">{{i.filetitle}}</h4>
+                  <a href="{{i.file.url}}" download="{{i.file}}" class="btn btn-outline-primary mr-2">Download</a>
+                  <a href="#" class="btn btn-outline-primary qr-trigger mr-2" data-qrdata="{{ i.file.url }}" data-fileid="{{ i.id }}">QR Code</a>
+                  <div class="qr-tooltip" id="qr-tooltip">
+                      <img id="qr-image" src="" alt="">
+                  </div>
+                  {% comment %} <img src="{% url 'generate_qr_code' i.id %}" alt="QR Code for {{ i.name }}"> {% endcomment %}
+                </div>
               </div>
             </div>
-          </div>
-          {% endfor %}
+            {% endfor %}
+          {% else %}
+            <h2>No Files Yet</h2>
+          {% endif %}
           <!--  -->
         </div>
       </div>

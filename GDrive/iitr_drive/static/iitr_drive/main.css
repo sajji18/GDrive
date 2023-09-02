@@ -1,6 +1,6 @@
 /* Style the QR tooltip */
 .qr-tooltip {
-    position: absolute;
+    position: relative;
     display: none;
     background-color: white;
     border: 1px solid #ccc;
@@ -13,9 +13,11 @@
     position: relative;
     text-decoration: none;
     color: #007bff;
+    cursor: pointer; /* Add this line to change the cursor on hover */
 }
 
 .qr-trigger:hover + .qr-tooltip {
     display: block;
     top: 20px; /* Adjust as needed to position the tooltip */
 }
+

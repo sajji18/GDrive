@@ -51,9 +51,12 @@ def add_folder(request):
     return render(request, 'iitr_drive/add_folder.html', {'form': form})
 
 
+from django.http import HttpResponse
+import qrcode
+from io import BytesIO
+
 def generate_qr_code(request, file_id):
-    # Get the file from your database or wherever it's stored
-    # Replace this with your own logic to fetch the file
+    # Fetch file from db
     file = File.objects.get(id=file_id)
     file_url = file.file.url
 
@@ -64,7 +67,7 @@ def generate_qr_code(request, file_id):
         box_size=10,
         border=4,
     )
-    qr.add_data(file_url)  # Assuming 'url' is the URL to the file
+    qr.add_data(file_url)
     qr.make(fit=True)
 
     # Create an image from the QR code
@@ -75,4 +78,8 @@ def generate_qr_code(request, file_id):
     qr_image.save(buffer, format="PNG")
     qr_image_data = buffer.getvalue()
 
-    return HttpResponse(qr_image_data, content_type="image/png")
+    # Set the response content type to image/png
+    response = HttpResponse(content_type="image/png")
+    response.write(qr_image_data)
+
+    return response
