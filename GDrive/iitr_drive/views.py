@@ -51,10 +51,6 @@ def add_folder(request):
     return render(request, 'iitr_drive/add_folder.html', {'form': form})
 
 
-from django.http import HttpResponse
-import qrcode
-from io import BytesIO
-
 def generate_qr_code(request, file_id):
     # Fetch file from db
     file = File.objects.get(id=file_id)
