@@ -1,7 +1,9 @@
+// QR Code Rendering script in JS 
+
 document.addEventListener('DOMContentLoaded', function() {
     const qrTriggers = document.querySelectorAll('.qr-trigger');
     const qrTooltip = document.querySelector('.qr-tooltip');
-    const qrImage = document.getElementById('qr-image'); // Get the img element
+    const qrImage = document.getElementById('qr-image'); 
 
     qrTriggers.forEach(qrTrigger => {
         qrTrigger.addEventListener('click', function(event) {

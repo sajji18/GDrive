@@ -64,8 +64,8 @@ def generate_qr_code(request, file_id):
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
-        box_size=10,
-        border=4,
+        box_size=6,
+        border=5,
     )
     qr.add_data(file_url)
     qr.make(fit=True)
