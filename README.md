@@ -22,7 +22,7 @@ pip install bootstrap4
 pip install qrcode[pil]
 pip install zeroconf
 ```
-Activate the Virtual Environment ('\' if on powershell)
+Activate the Virtual Environment (On Command Prompt)
 ```
 source venv/Scripts/activate
 ```
