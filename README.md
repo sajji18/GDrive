@@ -1,5 +1,9 @@
-# GDrive
-SDSlabs Developer Recruitment Task 2
+# SDSlabs Developer Recruitment Task 2
+## GDrive
+### **Project Description**
+GDrive is a platform which allows users to manage their folders, upload files, as well as allow them to share these files among others via Local Network, QR Code. The users can register in order to create an account and login to utitlize its features. The users can also download the files uploaded by them again in case they are lost on their personal device.
+
+### Challenges Faced:
 
 ### Installation
 Clone this Repository and Open Directory on Command Prompt
@@ -19,5 +23,9 @@ pip install qrcode[pil]
 Activate the Virtual Environment ('/' if on Command Prompt)
 ```
 source venv/Scripts/activate
+```
+Run the Server:
+```
+python manage.py runserver
 ```
 
