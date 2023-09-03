@@ -1,34 +1,75 @@
 {% extends 'home/layout/layout.html' %}
 
 {% block content %}
+<h1>New Folder</h1>
   <div class="modal-body">
     <form action="{% url 'add_folder' %}" method="POST">
-    {% csrf_token %}
       <div class="mb-3">
-        <label for="exampleFormControlInput1" class="form-label"
+        <label for="f_name" class="form-label"
           >Folder Name
         </label>
         <input
           type="text"
-          class="form-control mb-3"
-          id="exampleFormControlInput1"
-          name="name"
+          class="form-control"
+          id="f_name"
+          name="f_name"
         />
-        <label for="exampleFormControlInput1" class="form-label"
+        <label for="f_dis" class="form-label"
           >Folder Description
         </label>
         <input
           type="text"
-          class="form-control mb-3"
-          id="exampleFormControlInput1"
-          name="description"
+          class="form-control"
+          id="f_dis"
+          name="f_dis"
         />
         <input
           type="hidden"
-          value="folders"
+          value = "{{ context.parent_id}}"
+          id= 'f_parent_id'
+          name="f_parent_id"
         />
-        <button class="btn btn-outline-success my-3">Create Folder</button>
+        <button class="btn btn-outline-success my-3" name="btn_folder">Create Folder</button>
       </div>
     </form>
   </div>
 {% endblock %}
+
+{% block script %}
+{% comment %} In order to use AJAX {% endcomment %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script>
+  $(document.documentElement).on("click", "[name='btn_folder']", function (event){
+    event.preventDefault();
+    f_name = $('#f_name').val();
+    f_disp = $('#f_dis').val();
+    f_p_id = $('#f_parent_id').val();
+    $.ajax({
+      type: "POST",
+      url: "{% url 'add_folder' %}",
+      data: {
+        'f_name': f_name,
+        'f_dis': f_disp,
+        'f_parent_id' : f_p_id
+      },
+      success: function(data) {
+        // add redirect using jquery
+        if (data.success) {
+          window.location.href = "{% url 'folder_list' %}";
+        } 
+        else {
+            console.log(data.message);
+        }
+      },
+      error: function(xhr, textStatus, errorThrown) {
+        update_active_id(id);
+        console.log('Error:', errorThrown);
+        // Handle the error as needed
+      }
+    });
+  });
+
+</script>
+
+{% endblock script %}

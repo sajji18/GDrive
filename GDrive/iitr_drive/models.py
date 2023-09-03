@@ -8,6 +8,13 @@ class Folder(models.Model): # model to represent folders by users
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     description = models.TextField(default="Add Description")
     linked_in = models.BigIntegerField(default=-1)
+    is_public = models.BooleanField(default=True)
+    # parent_folder = models.ForeignKey('self', 
+    #                                   null=True, 
+    #                                   blank=True, 
+    #                                   related_name='child_folders', 
+    #                                   on_delete=models.CASCADE
+    #                                   )
     
     def __str__(self):
         return f'{self.name} (Owner: {self.owner.username})'

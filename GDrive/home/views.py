@@ -6,13 +6,16 @@ from iitr_drive import models as drive_models
 # Create your views here.
 def home(request):
     current_user = request.user
-    folders = drive_models.Folder.objects.filter(owner=current_user, linked_in=-1)
-
-    context = {
-        'folders': folders,
-        'parent_id': -1
-    }
-    return render(request, 'iitr_drive/folder_list.html', context)
+    
+    if current_user.is_authenticated:
+        folders = drive_models.Folder.objects.filter(owner=current_user, linked_in=-1)
+        context = {
+            'folders': folders,
+            'parent_id': -1
+        }
+        return render(request, 'iitr_drive/folder_list.html', context)
+    
+    return render(request, 'home/home.html')
 
 def register(request):
     if request.method == 'POST': 

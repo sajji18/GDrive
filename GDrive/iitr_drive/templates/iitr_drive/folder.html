@@ -34,15 +34,28 @@
     </div>
     <div class="">
       <!-- Button trigger modal -->
-      <button
-        type="button"
-        class="btn btn-outline-primary"
-        data-bs-toggle="modal"
-        data-bs-target="#exampleModal"
-      >
-        Upload
-      </button>
-  
+      <div class="d-flex">
+        <button
+          type="button"
+          class="btn btn-outline-primary mr-2"
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModal"
+        >
+          Upload
+        </button>
+        <a>
+          <button
+          type="button"
+          class="btn btn-outline-primary btn-block"
+          id="add-folder-button"
+          >
+            Add Folder
+          </button>
+        </a>
+      </div>
+    </div>
+      
+    <div class="">
       <!-- Modal -->
       <div
         class="modal fade"
@@ -66,22 +79,22 @@
               <form action="{% url 'folder' folderid %}" method="POST" enctype="multipart/form-data">
               {% csrf_token %}
                 <div class="mb-3">
-                  <label for="exampleFormControlInput1" class="form-label"
+                  <label for="file_name" class="form-label"
                     >Name</label
                   >
                   <input
                     type="file"
                     class="form-control"
-                    id="exampleFormControlInput1"
+                    id="file_name"
                     name="file"
                   />
-                  <label for="exampleFormControlInput1" class="form-label"
+                  <label for="file_title" class="form-label"
                     >Title</label
                   >
                   <input
                     type="text"
                     class="form-control"
-                    id="exampleFormControlInput1"
+                    id="file_title"
                     name="filetitle"
                   />
                   <button class="btn btn-outline-success my-3">
@@ -96,7 +109,7 @@
     </div>
   </div>
   {% endblock content %}
-  {% block body %}
+  {% block script %}
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         const qrTriggers = document.querySelectorAll('.qr-trigger');
@@ -137,5 +150,5 @@
         });
     });    
     </script>  
-  {% endblock body %}
+  {% endblock script %}
     

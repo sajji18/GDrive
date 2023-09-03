@@ -1,6 +1,10 @@
 {% extends "home/layout/layout.html" %}
 {% block content %}
-<h1>Folders</h1>
+{% if folders %}
+  <h1>Folders</h1>
+{% else %}
+  <h1>No Folders Yet</h1>
+{% endif %}
 <div style="display: flex; padding: 10px 10px; justify-content: space-between">
     <div class="">
       <div class="container py-3">

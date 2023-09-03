@@ -7,6 +7,7 @@ import qrcode
 from io import BytesIO
 from PIL import Image
 from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 @login_required
 def folder_list(request):
@@ -36,19 +37,34 @@ def folder_detail(request, folderid):
         return redirect('login')
 
 
+@csrf_exempt
 def add_folder(request):
     if request.method == 'POST':
-        form = FolderForm(request.POST)
-          
-        if form.is_valid():
-            folder = form.save(commit=False)
-            folder.owner = request.user
-            folder.save()
-            return redirect('folder_list')  # Redirect to the folder list page
-    else:
-        form = FolderForm()
+        folder_name = request.POST.get('f_name')
+        discrip = request.POST.get('f_dis')
+        parent_id = request.POST.get('f_parent_id')
+        
+        print(f"Folder Name: {folder_name}")
+        print(f"Description: {discrip}")
+        print(f"Parent ID: {parent_id}")
+        
+        if folder_name:  # Check if folder_name is not empty
+            owner = request.user
+            new_folder = Folder(name=folder_name, description=discrip, owner=owner)
+            
+            if parent_id != -1:
+                try:
+                    parent_folder = Folder.objects.get(id=parent_id)
+                    new_folder.parent_folder = parent_folder
+                except Folder.DoesNotExist:
+                    pass  
+
+            new_folder.save()
+            print("Folder saved successfully.")
+            return redirect('folder_list')
     
-    return render(request, 'iitr_drive/add_folder.html', {'form': form})
+    context = {'parent_id': -1}
+    return render(request, 'iitr_drive/add_folder.html', {'context':context})
 
 
 def generate_qr_code(request, file_id):
