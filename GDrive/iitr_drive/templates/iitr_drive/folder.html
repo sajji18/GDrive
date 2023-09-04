@@ -1,25 +1,45 @@
 {% extends "home/layout/layout.html" %}
 {% load static %}
 {% block content %}
-{% if files %}
-  <h1>Files</h1>
+{% if files or child_folders %}
+  <h1>Contents</h1>
 {% endif %}
 <div style="display: flex; justify-content: space-between; padding: 5px 10px;">
     <div class="">
       <div class="container py-3">
         <div class="row">
+          {% for child_folder in child_folders %}
+          <div class="col-sm">
+            <div class="card mb-4" style="width: 22rem">
+              <div class="card-body">
+                <h4 class="card-title">{{ child_folder.name }}</h4>
+                <a href="{% url 'folder_detail' child_folder.id %}" class="btn btn-outline-primary mr-2">Open</a>
+                <button class="btn btn-primary copy-link" data-clipboard-text="{{ child_folder.get_absolute_url }}">Copy Link</button>
+                <a href="{% url 'generate_qr_code' child_folder.id %}" download>
+                  <img src="{% url 'generate_qr_code' child_folder.id %}" alt="Download QR">
+                </a>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
           <!--  -->
           {% if files %}
             {% for i in files %}
             <div class="col-sm">
-              <div class="card mb-4" style="width: 18rem">
+              <div class="card mb-4" style="width: 22rem">
                 <div class="card-body">
                   <h4 class="card-title">{{i.filetitle}}</h4>
                   <a href="{{i.file.url}}" download="{{i.file}}" class="btn btn-outline-primary mr-2">Download</a>
-                  <a href="#" class="btn btn-outline-primary qr-trigger mr-2" data-qrdata="{{ i.file.url }}" data-fileid="{{ i.id }}">QR Code</a>
+                  <button class="btn btn-primary copy-link" data-clipboard-text="{{ i.file.url }}">Copy Link</button>
+                  
+                  <a href="{% url 'generate_qr_code' i.id %}" download>
+                    <img src="{% url 'generate_qr_code' i.id %}" alt="Download QR">
+                  </a>
+                  
+                  {% comment %} <a href="" class="btn btn-outline-primary qr-trigger mr-2" data-qrdata="{{ i.file.url }}" data-fileid="{{ i.id }}">QR Code</a> 
                   <div class="qr-tooltip" id="qr-tooltip">
                       <img id="qr-image" src="{% url 'generate_qr_code' i.id %}" alt="Error Fetching Url">
-                  </div>
+                  </div> {% endcomment %}
                   {% comment %} <img src="{% url 'generate_qr_code' i.id %}" alt="QR Code for {{ i.name }}"> {% endcomment %}
                 </div>
               </div>
@@ -48,6 +68,7 @@
           type="button"
           class="btn btn-outline-primary btn-block"
           id="add-folder-button"
+          
           >
             Add Folder
           </button>
@@ -55,58 +76,31 @@
       </div>
     </div>
       
-    <div class="">
-      <!-- Modal -->
-      <div
-        class="modal fade"
-        id="exampleModal"
-        tabindex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog">
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
           <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Upload</h5>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body">
-              <form action="{% url 'folder' folderid %}" method="POST" enctype="multipart/form-data">
-              {% csrf_token %}
-                <div class="mb-3">
-                  <label for="file_name" class="form-label"
-                    >Name</label
-                  >
-                  <input
-                    type="file"
-                    class="form-control"
-                    id="file_name"
-                    name="file"
-                  />
-                  <label for="file_title" class="form-label"
-                    >Title</label
-                  >
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="file_title"
-                    name="filetitle"
-                  />
-                  <button class="btn btn-outline-success my-3">
-                    Upload
-                  </button>
-                </div>
-              </form>
-            </div>
+              <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Upload</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <form id="fileUploadForm" action="{% url 'folder' folderid %}" method="POST" enctype="multipart/form-data">
+                      {% csrf_token %}
+                      <div class="mb-3">
+                          <label for="file_name" class="form-label">Name</label>
+                          <input type="file" class="form-control" id="file_name" name="file" />
+                          <label for="file_title" class="form-label">Title</label>
+                          <input type="text" class="form-control" id="file_title" name="filetitle" />
+  
+                          <!-- Hidden field to store the file token -->
+                          <input type="hidden" name="file_token" id="fileTokenInput" />
+  
+                          <button class="btn btn-outline-success my-3">Upload</button>
+                      </div>
+                  </form>
+              </div>
           </div>
-        </div>
       </div>
-    </div>
   </div>
   {% endblock content %}
   {% block script %}
@@ -119,7 +113,7 @@
         qrTriggers.forEach(qrTrigger => {
             qrTrigger.addEventListener('click', function(event) {
                 event.preventDefault(); 
-                // Get the data-qrdata attribute containing the file URL
+                
                 const qrData = qrTrigger.getAttribute('data-qrdata');
                 const file_id = qrTrigger.getAttribute('data-fileid');
     
@@ -149,6 +143,12 @@
             });
         });
     });    
-    </script>  
+    </script>
+    <script>
+      // generate a unique file token
+      var fileToken = uuidv4(); 
+      // Set the file token in the hidden field
+      $('#fileTokenInput').val(fileToken);
+  </script>
   {% endblock script %}
     

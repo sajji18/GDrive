@@ -24,8 +24,13 @@ def folder_list(request):
 def folder_detail(request, folderid):
     if request.user.is_authenticated:
         folder_user = get_object_or_404(Folder, id=folderid)
+        child_folders = Folder.objects.filter(parent_folder=folder_user)
         files = File.objects.filter(folder=folder_user)
-        context = {'folderid':folderid,'files':files}
+        context = {
+            'folderid':folderid,
+            'files':files,
+            'child_folders': child_folders
+            }
         
         if request.method == 'POST':
             file_user = request.FILES.get('file')
@@ -48,7 +53,7 @@ def add_folder(request):
         print(f"Description: {discrip}")
         print(f"Parent ID: {parent_id}")
         
-        if folder_name:  # Check if folder_name is not empty
+        if folder_name:  
             owner = request.user
             new_folder = Folder(name=folder_name, description=discrip, owner=owner)
             
@@ -76,13 +81,13 @@ def generate_qr_code(request, file_id):
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
-        box_size=6,
-        border=5,
+        box_size=2,
+        border=2,
     )
     qr.add_data(file_url)
     qr.make(fit=True)
 
-    # Create an image from the QR code
+    # Create Image from QR
     qr_image = qr.make_image(fill_color="black", back_color="white")
 
     # Prepare the image for rendering in a template
