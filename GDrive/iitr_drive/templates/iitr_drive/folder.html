@@ -35,12 +35,6 @@
                   <a href="{% url 'generate_qr_code' i.id %}" download>
                     <img src="{% url 'generate_qr_code' i.id %}" alt="Download QR">
                   </a>
-                  
-                  {% comment %} <a href="" class="btn btn-outline-primary qr-trigger mr-2" data-qrdata="{{ i.file.url }}" data-fileid="{{ i.id }}">QR Code</a> 
-                  <div class="qr-tooltip" id="qr-tooltip">
-                      <img id="qr-image" src="{% url 'generate_qr_code' i.id %}" alt="Error Fetching Url">
-                  </div> {% endcomment %}
-                  {% comment %} <img src="{% url 'generate_qr_code' i.id %}" alt="QR Code for {{ i.name }}"> {% endcomment %}
                 </div>
               </div>
             </div>
