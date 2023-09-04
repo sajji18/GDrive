@@ -5,6 +5,7 @@ GDrive is a platform which allows users to manage their folders, upload files, a
 
 ### Challenges Faced:
 
+
 ### Installation
 Clone this Repository and Open Directory on Command Prompt
 ```
@@ -19,12 +20,13 @@ Install Required Packages and Modules
 pip install django
 pip install bootstrap4
 pip install qrcode[pil]
+pip install zeroconf
 ```
-Activate the Virtual Environment ('/' if on Command Prompt)
+Activate the Virtual Environment (On Command Prompt)
 ```
 source venv/Scripts/activate
 ```
-Run the Server:
+Run the Live Server:
 ```
 python manage.py runserver
 ```
