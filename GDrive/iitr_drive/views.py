@@ -8,6 +8,7 @@ from io import BytesIO
 from PIL import Image
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+import uuid
 
 @login_required
 def folder_list(request):

@@ -9,16 +9,12 @@
       <div class="container py-3">
         <div class="row">
           {% for child_folder in child_folders %}
-          <div class="col-sm">
-            <div class="card mb-4" style="width: 22rem">
-              <div class="card-body">
-                <h4 class="card-title">{{ child_folder.name }}</h4>
-                <a href="{% url 'folder_detail' child_folder.id %}" class="btn btn-outline-primary mr-2">Open</a>
-                <button class="btn btn-primary copy-link" data-clipboard-text="{{ child_folder.get_absolute_url }}">Copy Link</button>
-                <a href="{% url 'generate_qr_code' child_folder.id %}" download>
-                  <img src="{% url 'generate_qr_code' child_folder.id %}" alt="Download QR">
-                </a>
-              </div>
+          <div class="card mb-4 mr-4" style="width: 20rem;">
+            <div class="card-body">
+              <h5 class="card-title">{{child_folder.name}}</h5>
+              <h6 class="card-subtitle mb-2 text-body-secondary">By {{child_folder.owner}}</h6>
+              <p class="card-text">{{child_folder.description}}</p>
+              <a href="{}" class="card-link" target="_blank">Open Folder</a>
             </div>
           </div>
           {% endfor %}
@@ -26,11 +22,12 @@
           {% if files %}
             {% for i in files %}
             <div class="col-sm">
-              <div class="card mb-4" style="width: 22rem">
+              <div class="card mb-4" style="width: 20rem">
                 <div class="card-body">
                   <h4 class="card-title">{{i.filetitle}}</h4>
                   <a href="{{i.file.url}}" download="{{i.file}}" class="btn btn-outline-primary mr-2">Download</a>
-                  <button class="btn btn-primary copy-link" data-clipboard-text="{{ i.file.url }}">Copy Link</button>
+                  <button class="btn btn-outline-primary share-button" data-file-id="{{ i.id }}">Copy Link</button>
+                  <div class="shareable-link" style="display: none;"></div>
                   
                   <a href="{% url 'generate_qr_code' i.id %}" download>
                     <img src="{% url 'generate_qr_code' i.id %}" alt="Download QR">
@@ -98,51 +95,5 @@
   </div>
   {% endblock content %}
   {% block script %}
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const qrTriggers = document.querySelectorAll('.qr-trigger');
-        const qrTooltip = document.querySelector('.qr-tooltip');
-        const qrImage = document.getElementById('qr-image'); 
-    
-        qrTriggers.forEach(qrTrigger => {
-            qrTrigger.addEventListener('click', function(event) {
-                event.preventDefault(); 
-                
-                const qrData = qrTrigger.getAttribute('data-qrdata');
-                const file_id = qrTrigger.getAttribute('data-fileid');
-    
-                // AJAX Request to Fetch QR
-                fetch(`/generate_qr_code/${file_id}/`)
-                    .then(response => response.blob()) 
-                    .then(blob => {
-                        // Create an object URL from the blob
-                        const objectURL = URL.createObjectURL(blob);
-                        
-                        // Set the src attribute of the img element
-                        qrImage.src = objectURL;
-                        qrImage.alt = `QR Code for ${qrData}`;
-    
-                        // Adjust the dimensions of the tooltip div
-                        qrTooltip.style.width = `${qrImage.width}px`;
-                        qrTooltip.style.height = `${qrImage.height}px`;
-    
-                        // Show the tooltip -> Previously set to None
-                        qrTooltip.style.display = 'block';
-
-                        URL.revokeObjectURL(objectURL);
-                    })
-                    .catch(error => {
-                        console.error('Error fetching QR code:', error);
-                    });
-            });
-        });
-    });    
-    </script>
-    <script>
-      // generate a unique file token
-      var fileToken = uuidv4(); 
-      // Set the file token in the hidden field
-      $('#fileTokenInput').val(fileToken);
-  </script>
   {% endblock script %}
     
