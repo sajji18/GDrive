@@ -1,0 +1,15 @@
+{% extends 'home/layout/layout.html' %}
+{% block content %}
+
+<div class="col-sm">
+  <div class="card mb-4" style="width: 24rem">
+      <div class="card-body">
+        <h4 class="card-title">{{i.filetitle}}</h4>
+        <div class="btn-group">
+          <a href="{{i.file.url}}" download="{{i.file}}" class="btn btn-outline-primary mr-2">Download</a>
+        </div>
+      </div>
+  </div>
+</div>
+
+{% endblock content %}

@@ -76,10 +76,24 @@ def add_folder(request):
     return render(request, 'iitr_drive/add_folder.html', {'context':context})
 
 
+def lauda(request,file_id):
+    file_url = reverse('view_shared_file', args=[file_id])
+    files = File.objects.filter(id=file_id)
+    context = {
+            'i': files,
+        }
+    
+    return render(request, 'iitr_drive/view_shared_file.html' , {'context': context})
+
+
+
+from django.shortcuts import redirect, reverse
+
+
 def generate_qr_code(request, file_id):
     # Fetch file from db
-    file = File.objects.get(id=file_id)
-    file_url = file.file.url
+
+    file_url = reverse('view_shared_file', args=[file_id])
 
     # Generate the QR code
     qr = qrcode.QRCode(
