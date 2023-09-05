@@ -8,6 +8,7 @@ urlpatterns = [
          views.folder_detail, 
          name='folder'
          ),
+    path('delete_file/<int:file_id>/', views.delete_file, name='delete_file'),
     # path('folder/<int:parent_id>/add_child_folder/', 
     #      views.add_child_folder, 
     #      name='add_child_folder'

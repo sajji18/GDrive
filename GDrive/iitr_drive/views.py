@@ -28,15 +28,18 @@ def folder_detail(request, folderid):
         child_folders = Folder.objects.filter(parent_folder=folder_user)
         files = File.objects.filter(folder=folder_user)
         context = {
-            'folderid':folderid,
-            'files':files,
+            'folderid': folderid,
+            'files': files,
             'child_folders': child_folders
-            }
-        
+        }
+
         if request.method == 'POST':
-            file_user = request.FILES.get('file')
-            file_title = request.POST.get('filetitle')
-            fileadd = File.objects.create(filetitle=file_title,file=file_user,folder=folder_user)
+            # Check if the request contains a file upload
+            if 'file' in request.FILES:
+                file_user = request.FILES['file']
+                file_title = request.POST.get('filetitle')
+                if file_title:
+                    fileadd = File.objects.create(filetitle=file_title, file=file_user, folder=folder_user)
 
         return render(request, 'iitr_drive/folder.html', context)
     else:
@@ -101,3 +104,17 @@ def generate_qr_code(request, file_id):
     response.write(qr_image_data)
 
     return response
+
+
+@login_required
+def delete_file(request, file_id):
+    try:
+        file = File.objects.get(id=file_id)
+        # Check if the user has permission to delete this file
+        if file.folder.owner == request.user:
+            file.delete()
+            return JsonResponse({'success': True, 'message': 'File deleted successfully'})
+        else:
+            return JsonResponse({'success': False, 'message': 'Permission denied'})
+    except File.DoesNotExist:
+        return JsonResponse({'success': False, 'message': 'File not found'})

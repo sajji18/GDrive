@@ -21,7 +21,7 @@ class Folder(models.Model): # model to represent folders by users
 
     
 class File(models.Model):
-    filetitle = models.CharField(max_length=55)
+    filetitle = models.CharField(max_length=55, default="File")
     folder = models.ForeignKey(Folder, on_delete=models.CASCADE)
     file = models.FileField(upload_to="Files")
     

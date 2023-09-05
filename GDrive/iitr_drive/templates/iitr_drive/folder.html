@@ -11,17 +11,21 @@
           {% if files %}
             {% for i in files %}
             <div class="col-sm">
-              <div class="card mb-4" style="width: 20rem">
-                <div class="card-body">
-                  <h4 class="card-title">{{i.filetitle}}</h4>
-                  <a href="{{i.file.url}}" download="{{i.file}}" class="btn btn-outline-primary mr-2">Download</a>
-                  <button>
-                    <a href="{% url 'generate_qr_code' i.id %}" src="{% url 'generate_qr_code' i.id %}" download>
-                      <img src="{% url 'generate_qr_code' i.id %}" alt="Download QR">
-                    </a>
-                  </button>
+                <div class="card mb-4" style="width: 24rem">
+                    <div class="card-body">
+                      <h4 class="card-title">{{i.filetitle}}</h4>
+                      <div class="btn-group">
+                        <a href="{{i.file.url}}" download="{{i.file}}" class="btn btn-outline-primary mr-2">Download</a>
+                        <button class="btn btn-outline-primary mr-2" type="button" data-share-file="{{ i.id }}">Share</button>
+                        <a href="{% url 'delete_file' i.id %}" class="btn btn-danger delete-file mr-2" data-fileid="{{ i.id }}">Delete</a>
+                        <button>
+                            <a href="{% url 'generate_qr_code' i.id %}" src="{% url 'generate_qr_code' i.id %}" download>
+                                <img src="{% url 'generate_qr_code' i.id %}" alt="Download QR">
+                            </a>
+                        </button>
+                      </div>
+                    </div>
                 </div>
-              </div>
             </div>
             {% endfor %}
           {% else %}
@@ -82,5 +86,73 @@
   </div>
   {% endblock content %}
   {% block script %}
+    {% comment %} <script>
+      // Create a WebSocket connection
+      const socket = new WebSocket('ws://127.0.0.1:8000/ws/file_share/');
+
+      socket.onopen = (event) => {
+          // WebSocket connection opened
+          console.log('WebSocket connection opened');
+      };
+
+      socket.onmessage = (event) => {
+          // Handle WebSocket messages here
+          const data = JSON.parse(event.data);
+          if (data.type === 'file_shared') {
+              // Handle file shared event
+              console.log(data.message);
+              // Update the shared files list or display a notification
+          }
+      };
+
+      socket.onclose = (event) => {
+          // WebSocket connection closed
+          console.log('WebSocket connection closed');
+      };
+
+      // JavaScript code for WebSocket connection and file sharing
+      // Add an event listener to each Share button
+      document.querySelectorAll('[data-share-file]').forEach(function (button) {
+        button.addEventListener('click', function (event) {
+            event.preventDefault();
+            const fileId = this.getAttribute('data-share-file');
+            const formId = `share-file-form-${fileId}`;
+            const form = document.getElementById(formId);
+
+            // Send a WebSocket message to share the file
+            socket.send(JSON.stringify({
+                type: 'share_file',
+                file_id: fileId,
+            }));
+        });
+      });
+
+    </script> {% endcomment %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).on("click", ".delete-file", function () {
+            if (confirm("Are you sure you want to delete this file?")) {
+                var fileId = $(this).data("fileid");
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'delete_file' 0 %}".replace('0', fileId),
+                    success: function (data) {
+                        if (data.success) {
+                            // File deleted successfully, update the UI
+                            // You may want to remove the card or update the file list
+                            location.reload(); // Reload the page or update the UI as needed
+                        } else {
+                            alert("Delete failed: " + data.message);
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.log('Error:', errorThrown);
+                        alert("An error occurred while deleting the file.");
+                    }
+                });
+            }
+        });
+    </script>
+
   {% endblock script %}
     
