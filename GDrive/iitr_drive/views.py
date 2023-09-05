@@ -82,7 +82,7 @@ def generate_qr_code(request, file_id):
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
-        box_size=2,
+        box_size=1,
         border=1,
     )
     qr.add_data(file_url)

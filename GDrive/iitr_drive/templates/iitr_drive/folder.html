@@ -8,17 +8,6 @@
     <div class="">
       <div class="container py-3">
         <div class="row">
-          {% for child_folder in child_folders %}
-          <div class="card mb-4 mr-4" style="width: 20rem;">
-            <div class="card-body">
-              <h5 class="card-title">{{child_folder.name}}</h5>
-              <h6 class="card-subtitle mb-2 text-body-secondary">By {{child_folder.owner}}</h6>
-              <p class="card-text">{{child_folder.description}}</p>
-              <a href="{}" class="card-link" target="_blank">Open Folder</a>
-            </div>
-          </div>
-          {% endfor %}
-          <!--  -->
           {% if files %}
             {% for i in files %}
             <div class="col-sm">
@@ -26,12 +15,11 @@
                 <div class="card-body">
                   <h4 class="card-title">{{i.filetitle}}</h4>
                   <a href="{{i.file.url}}" download="{{i.file}}" class="btn btn-outline-primary mr-2">Download</a>
-                  <button class="btn btn-outline-primary share-button" data-file-id="{{ i.id }}">Copy Link</button>
-                  <div class="shareable-link" style="display: none;"></div>
-                  
-                  <a href="{% url 'generate_qr_code' i.id %}" download>
-                    <img src="{% url 'generate_qr_code' i.id %}" alt="Download QR">
-                  </a>
+                  <button>
+                    <a href="{% url 'generate_qr_code' i.id %}" src="{% url 'generate_qr_code' i.id %}" download>
+                      <img src="{% url 'generate_qr_code' i.id %}" alt="Download QR">
+                    </a>
+                  </button>
                 </div>
               </div>
             </div>
@@ -39,7 +27,6 @@
           {% else %}
             <h2>No Files Yet</h2>
           {% endif %}
-          <!--  -->
         </div>
       </div>
     </div>
