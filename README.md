@@ -32,7 +32,7 @@ python manage.py runserver
 ```
 
 ### Video Demonstration:
-Download the Video in the Google Drive (link attached below) ->
+Follow the Video in the Google Drive (link attached below) ->
 <a href="https://drive.google.com/drive/folders/1tqPAM6xQR1hwbnm4WiSZtiYVrZBwJwAg?usp=drive_link">Click Here To Access the Video</a>
 
 ### Future Scope of this Project:
