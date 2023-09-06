@@ -1,7 +1,7 @@
 # SDSlabs Developer Recruitment Task 2
 ## GDrive
 ### **Project Description**
-GDrive is a platform which allows users to manage their folders, upload files, as well as allow them to share these files among others via Local Network, QR Code. The users can register in order to create an account and login to utitlize its features. The users can also download the files uploaded by them again in case they are lost on their personal device.
+GDrive is a platform which allows users to create and manage their folders, upload and delete files in these folders, as well as allow them to share these files among others via QR Code. The users can register in order to create an account and login to utitlize its features. The users can also download the files uploaded by them again in case they are lost on their personal device.
 
 ### Challenges Faced:
 
@@ -15,19 +15,19 @@ Create virtual environment on your local machine with following command
 ```
 python3 -m venv venv
 ```
-Install Required Packages and Modules
+Install requirements.txt to include the required packages and modules
 ```
-pip install django
-pip install bootstrap4
-pip install qrcode[pil]
-pip install zeroconf
+pip install -r requirements.txt
 ```
 Activate the Virtual Environment (On Command Prompt)
 ```
 source venv/Scripts/activate
 ```
-Run the Live Server:
+Run the Live Server (The current directory should include manage.py):
 ```
 python manage.py runserver
 ```
+
+### Future Scope of this Project:
+
 
