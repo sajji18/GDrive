@@ -28,6 +28,9 @@ Run the Live Server (The current directory should include manage.py):
 python manage.py runserver
 ```
 
+### Video Demonstration:
+<a href="https://drive.google.com/drive/folders/1tqPAM6xQR1hwbnm4WiSZtiYVrZBwJwAg?usp=drive_link">Click Here To Access the Video</a>
+
 ### Future Scope of this Project:
 
 
