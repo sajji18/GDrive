@@ -4,10 +4,10 @@
 GDrive is a platform which allows users to create and manage their folders, upload and delete files in these folders, as well as allow them to share these files among others via QR Code. The users can register in order to create an account and login to utitlize its features. The users can also download the files uploaded by them again in case they are lost on their personal device.
 
 ### Challenges Faced:
-Implementing Folder Nesting -> Child Folders inside of Parent Folders.
-File Transfer on a Local Network
-Implementing AJAX updates
-Building from Scratch in a Short Time Interval
+Implementing Folder Nesting -> Child Folders inside of Parent Folders,
+File Transfer on a Local Network,
+Implementing AJAX updates,
+Building from Scratch in a Short Time Interval, 
 
 ### Installation
 Clone this Repository and Open Directory on Command Prompt
