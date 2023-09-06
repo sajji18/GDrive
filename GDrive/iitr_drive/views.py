@@ -76,22 +76,23 @@ def add_folder(request):
     return render(request, 'iitr_drive/add_folder.html', {'context':context})
 
 
-def lauda(request,file_id):
-    file_url = reverse('view_shared_file', args=[file_id])
-    files = File.objects.filter(id=file_id)
-    context = {
-            'i': files,
-        }
-    
-    return render(request, 'iitr_drive/view_shared_file.html' , {'context': context})
+def lauda(request, file_id):
+    # Fetch the File object based on file_id
+    file_obj = get_object_or_404(File, id=file_id)
 
+    context = {
+        'file_obj': file_obj,  # Pass the file object in the context
+    }
+
+    return render(request, 'iitr_drive/view_shared_file.html', context)
 
 def generate_qr_code(request, file_id):
-    # Fetch file from db
+    # Fetch the File object based on file_id
+    file_obj = get_object_or_404(File, id=file_id)
 
-    file_url = reverse('view_shared_file', args=[file_id])
+    # Generate the QR code for the file's URL
+    file_url = request.build_absolute_uri(file_obj.file.url)
 
-    # Generate the QR code
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
@@ -110,11 +111,12 @@ def generate_qr_code(request, file_id):
     qr_image_data = buffer.getvalue()
 
     # Set the response content type to image/png
-    response = HttpResponse(content_type="image/png")
-    response.write(qr_image_data)
+    response = HttpResponse(qr_image_data, content_type="image/png")
+
+    # Suggest a filename for the downloaded QR code
+    response['Content-Disposition'] = f'attachment; filename="{file_obj.filetitle}_qr.png"'
 
     return response
-
 
 @login_required
 def delete_file(request, file_id):

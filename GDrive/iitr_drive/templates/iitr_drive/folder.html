@@ -136,9 +136,7 @@
                     url: "{% url 'delete_file' 0 %}".replace('0', fileId),
                     success: function (data) {
                         if (data.success == true) {
-                            // File deleted successfully, update the UI
-                            // You may want to remove the card or update the file list
-                            window.location.href = {% url '' %}; // Reload the page or update the UI as needed
+                            window.location.href = {% url 'folder_list' %}; // Reload the page or update the UI as needed
                         } else {
                             alert("Delete failed: " + data.message);
                         }
