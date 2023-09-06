@@ -86,10 +86,6 @@ def lauda(request,file_id):
     return render(request, 'iitr_drive/view_shared_file.html' , {'context': context})
 
 
-
-from django.shortcuts import redirect, reverse
-
-
 def generate_qr_code(request, file_id):
     # Fetch file from db
 

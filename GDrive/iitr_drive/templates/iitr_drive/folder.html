@@ -16,14 +16,11 @@
                       <h4 class="card-title">{{i.filetitle}}</h4>
                       <div class="btn-group">
                         <a href="{{i.file.url}}" download="{{i.file}}" class="btn btn-outline-primary mr-2">Download</a>
-                        <button class="btn btn-outline-primary mr-2" type="button" data-share-file="{{ i.id }}">Share</button>
                         <a href="{% url 'delete_file' i.id %}" class="btn btn-danger mr-2" name="delete-file" data-fileid="{{ i.id }}">Delete</a>
-                        <button>
-                            <a href="{% url 'generate_qr_code' i.id %}" src="{% url 'generate_qr_code' i.id %}" download>
-                                Download QR
-                                {% comment %} <img src="{% url 'generate_qr_code' i.id %}" alt="Download QR"> {% endcomment %}
-                            </a>
-                        </button>
+                        <a href="{% url 'generate_qr_code' i.id %}" class="btn btn-outline-primary mr-2" src="{% url 'generate_qr_code' i.id %}" download>
+                            Download QR
+                            {% comment %} <img src="{% url 'generate_qr_code' i.id %}" alt="Download QR"> {% endcomment %}
+                        </a>
                       </div>
                     </div>
                 </div>
