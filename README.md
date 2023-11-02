@@ -15,7 +15,7 @@ git clone "repo_link"
 ```
 Create virtual environment on your local machine with following command
 ```
-python3 -m venv venv
+python -m venv venv
 ```
 Install requirements.txt to include the required packages and modules
 ```
@@ -23,7 +23,7 @@ pip install -r requirements.txt
 ```
 Activate the Virtual Environment (On Command Prompt)
 ```
-source venv/Scripts/activate
+venv\Scripts\activate
 ```
 Run the Live Server (The current directory should include manage.py):
 ```
