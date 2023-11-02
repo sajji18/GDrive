@@ -1,5 +1,4 @@
-# SDSlabs Developer Recruitment Task 2
-## GDrive
+## FileSyncX
 ### **Project Description**
 GDrive is a platform which allows users to create and manage their folders, upload and delete files in these folders, as well as allow them to share these files among others via QR Code. The users can register in order to create an account and login to utitlize its features. The users can also download the files uploaded by them again in case they are lost on their personal device.
 
