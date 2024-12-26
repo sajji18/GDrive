@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import FolderForm
 from django.contrib.auth.decorators import login_required
-from .models import Folder, File
+from .models import Folder, File, FolderRelationTable
 from django.urls import reverse
 import qrcode
 from io import BytesIO
@@ -13,34 +13,32 @@ import uuid
 @login_required
 def folder_list(request):
     current_user = request.user
-    folders = Folder.objects.filter(owner=current_user, linked_in=-1)
-
+    folders = Folder.objects.filter(owner=current_user, parent_id=-1)
+    print(folders)
     context = {
         'folders': folders,
-        'parent_id': -1
     }
     return render(request, 'iitr_drive/folder_list.html', context)
 
 
 def folder_detail(request, folderid):
     if request.user.is_authenticated:
-        folder_user = get_object_or_404(Folder, id=folderid)
-        child_folders = Folder.objects.filter(parent_folder=folder_user)
-        files = File.objects.filter(folder=folder_user)
+        current_folder = get_object_or_404(Folder, id=folderid)
+        children_records = FolderRelationTable.objects.filter(parent=current_folder)
+        child_folders = [record.child for record in children_records]
+        files = File.objects.filter(folder=current_folder)
         context = {
             'folderid': folderid,
             'files': files,
             'child_folders': child_folders
         }
-
         if request.method == 'POST':
-            # Check if the request contains a file upload
             if 'file' in request.FILES:
                 file_user = request.FILES['file']
                 file_title = request.POST.get('filetitle')
                 if file_title:
-                    fileadd = File.objects.create(filetitle=file_title, file=file_user, folder=folder_user)
-
+                    fileadd = File.objects.create(filetitle=file_title, file=file_user, folder=current_folder)
+                    fileadd.save()
         return render(request, 'iitr_drive/folder.html', context)
     else:
         return redirect('login')
@@ -49,48 +47,44 @@ def folder_detail(request, folderid):
 @csrf_exempt
 def add_folder(request):
     if request.method == 'POST':
-        folder_name = request.POST.get('f_name')
-        discrip = request.POST.get('f_dis')
-        parent_id = request.POST.get('f_parent_id')
-        
-        print(f"Folder Name: {folder_name}")
-        print(f"Description: {discrip}")
-        print(f"Parent ID: {parent_id}")
-        
+        folder_name = request.POST['folder_name']
+        description = request.POST['folder_description']
+        parent_id = (request.POST['folder_parent_id'])
         if folder_name:  
             owner = request.user
-            new_folder = Folder(name=folder_name, description=discrip, owner=owner)
-            
-            if parent_id != -1:
-                try:
-                    parent_folder = Folder.objects.get(id=parent_id)
-                    new_folder.parent_folder = parent_folder
-                except Folder.DoesNotExist:
-                    pass  
-
+            new_folder = Folder(name=folder_name, description=description, owner=owner)
             new_folder.save()
+            if parent_id not in ['None', '-1']:
+                parent_id = int(parent_id)
+                parent_child_record = FolderRelationTable(
+                    parent_id=parent_id, 
+                    child_id=new_folder.id
+                )       
+                parent_child_record.save()
+                new_folder.parent_id = parent_id
+                new_folder.save()
             print("Folder saved successfully.")
             return redirect('folder_list')
-    
-    context = {'parent_id': -1}
-    return render(request, 'iitr_drive/add_folder.html', {'context':context})
+        else: 
+            return JsonResponse({ 'message': "Folder Name is Required" })
+    elif request.method == 'GET':
+        parent_id = request.GET.get('parent_id')
+        if parent_id == -1:
+            return render(request, 'iitr_drive/add_folder.html')
+        else:
+            return render(request, 'iitr_drive/folder.html', {'folderid': parent_id})
+    return JsonResponse({ 'message': "Invalid Request" })
 
 
 def lauda(request, file_id):
-    # Fetch the File object based on file_id
     file_obj = get_object_or_404(File, id=file_id)
-
     context = {
-        'file_obj': file_obj,  # Pass the file object in the context
+        'file_obj': file_obj,
     }
-
     return render(request, 'iitr_drive/view_shared_file.html', context)
 
 def generate_qr_code(request, file_id):
-    # Fetch the File object based on file_id
     file_obj = get_object_or_404(File, id=file_id)
-
-    # Generate the QR code for the file's URL
     file_url = request.build_absolute_uri(file_obj.file.url)
 
     qr = qrcode.QRCode(
@@ -101,19 +95,13 @@ def generate_qr_code(request, file_id):
     )
     qr.add_data(file_url)
     qr.make(fit=True)
-
-    # Create Image from QR
     qr_image = qr.make_image(fill_color="black", back_color="white")
-
-    # Prepare the image for rendering in a template
+    
     buffer = BytesIO()
     qr_image.save(buffer, format="PNG")
     qr_image_data = buffer.getvalue()
-
-    # Set the response content type to image/png
+    
     response = HttpResponse(qr_image_data, content_type="image/png")
-
-    # Suggest a filename for the downloaded QR code
     response['Content-Disposition'] = f'attachment; filename="{file_obj.filetitle}_qr.png"'
 
     return response
@@ -122,7 +110,6 @@ def generate_qr_code(request, file_id):
 def delete_file(request, file_id):
     try:
         file = File.objects.get(id=file_id)
-        # Check if the user has permission to delete this file
         if file.folder.owner == request.user:
             file.delete()
             return JsonResponse({'success': True, 'message': 'File deleted successfully'})

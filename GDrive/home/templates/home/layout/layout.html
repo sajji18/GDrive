@@ -47,9 +47,9 @@
         </nav>
       </header>
 
-    <main role="main" class="container">
-        <div class="row">
-            <div class="col-md-8">
+    <main role="main" class="container" style="display: flex; flex-direction: column; width: 100%;">
+        <div style="display: flex; flex-direction: column; width: 100%;">
+            <div style="display: flex; flex-direction: column; width: 100%;">
               {% if messages %}
                 {% for message in messages %}
                   <div class="alert alert-{{ message.tags }}">

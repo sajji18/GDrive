@@ -5,29 +5,29 @@
   <div class="modal-body">
     <form action="{% url 'add_folder' %}" method="POST">
       <div class="mb-3">
-        <label for="f_name" class="form-label"
+        <label for="folder_name" class="form-label"
           >Folder Name
         </label>
         <input
           type="text"
           class="form-control"
-          id="f_name"
-          name="f_name"
+          id="folder_name"
+          name="folder_name"
         />
-        <label for="f_dis" class="form-label"
+        <label for="folder_description" class="form-label"
           >Folder Description
         </label>
         <input
           type="text"
           class="form-control"
-          id="f_dis"
-          name="f_dis"
+          id="folder_description"
+          name="folder_description"
         />
         <input
           type="hidden"
-          value = "{{ context.parent_id}}"
-          id= 'f_parent_id'
-          name="f_parent_id"
+          value = "-1"
+          id='folder_parent_id'
+          name="folder_parent_id"
         />
         <button class="btn btn-outline-success my-3" name="btn_folder">Create Folder</button>
       </div>
@@ -42,16 +42,16 @@
 <script>
   $(document.documentElement).on("click", "[name='btn_folder']", function (event){
     event.preventDefault();
-    f_name = $('#f_name').val();
-    f_disp = $('#f_dis').val();
-    f_p_id = $('#f_parent_id').val();
+    folder_name = $('#folder_name').val();
+    folder_description = $('#folder_description').val();
+    f_p_id = $('#folder_parent_id').val();
     $.ajax({
       type: "POST",
       url: "{% url 'add_folder' %}",
       data: {
-        'f_name': f_name,
-        'f_dis': f_disp,
-        'f_parent_id' : f_p_id
+        'folder_name': folder_name,
+        'folder_description': folder_description,
+        'folder_parent_id' : f_p_id
       },
       success: function(data) {
         // add redirect using jquery

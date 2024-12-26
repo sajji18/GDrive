@@ -1,61 +1,73 @@
 {% extends "home/layout/layout.html" %}
 {% load static %}
 {% block content %}
-{% if files or child_folders %}
-  <h1>Contents</h1>
-{% endif %}
-<div style="display: flex; justify-content: space-between; padding: 5px 10px;">
-    <div class="">
-      <div class="container py-3">
-        <div class="row">
-          {% if files %}
-            {% for i in files %}
-            <div class="col-sm">
-                <div class="card mb-4" style="width: 24rem">
-                    <div class="card-body">
-                      <h4 class="card-title">{{i.filetitle}}</h4>
-                      <div class="btn-group">
-                        <a href="{{i.file.url}}" download="{{i.file}}" class="btn btn-outline-primary mr-2">Download</a>
-                        <a href="{% url 'delete_file' i.id %}" class="btn btn-danger mr-2" name="delete-file" data-fileid="{{ i.id }}">Delete</a>
-                        <a href="{% url 'generate_qr_code' i.id %}" class="btn btn-outline-primary mr-2" src="{% url 'generate_qr_code' i.id %}" download>
-                            Download QR
-                            {% comment %} <img src="{% url 'generate_qr_code' i.id %}" alt="Download QR"> {% endcomment %}
-                        </a>
-                      </div>
-                    </div>
-                </div>
+<div style="display: flex; justify-content: space-between; padding: 5px 10px; width: 100%;">
+  <div style="display: flex; flex-direction: column; width: 70%;">
+    {% if files or child_folders %}
+      <h1>Contents</h1>
+    {% else %}
+      <h1>No Files or Folders Yet</h1>
+    {% endif %}
+  </div>
+  <div style="">
+      <button
+        type="button"
+        class="btn btn-outline-primary mr-2"
+        data-bs-toggle="modal"
+        data-bs-target="#exampleModal"
+      >
+        Upload
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-primary mr-2"
+        data-bs-toggle="modal"
+        data-bs-target="#addFolderModal"
+      >
+        Add Folder
+      </button>
+      <button class="btn btn-dark" href="{% url 'folder' folderid %}">Back</button>
+    </div>
+</div>
+<div style="display: flex; padding: 5px 10px; width: 100%;">
+  <div style="display: flex; flex-drection: row; align-items: center; flex-wrap: wrap; width: 100%;">
+    <!-- Nested Child Folders inside Parent Folder -->
+      {% if child_folders %}
+        {% for folder in child_folders %}
+          <div class="card mb-2 mr-2" style="width: 30%">
+            <div class="card-body" style="display: flex; flex-direction: column; height: 100%">
+              <h5 class="card-title">{{folder.name}}</h5>
+              {% if folder.description %}
+                <p class="card-text">{{folder.description}}</p>
+              {% else %}
+                <p class="card-text">No Description Provided</p>
+                {% endif %}
+              <a href="{% url 'folder' folderid=folder.id %}" class="card-link">Open Folder</a>
             </div>
-            {% endfor %}
-          {% else %}
-            <h2>No Files Yet</h2>
-          {% endif %}
-        </div>
-      </div>
-    </div>
-    <div class="">
-      <!-- Button trigger modal -->
-      <div class="d-flex">
-        <button
-          type="button"
-          class="btn btn-outline-primary mr-2"
-          data-bs-toggle="modal"
-          data-bs-target="#exampleModal"
-        >
-          Upload
-        </button>
-        <a>
-          <button
-          type="button"
-          class="btn btn-outline-primary btn-block"
-          id="add-folder-button"
-          
-          >
-            Add Folder
-          </button>
-        </a>
-      </div>
-    </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+      <!-- Files inside Parent Folder -->
+      {% if files %}
+        {% for i in files %}
+          <div class="card mb-2 mr-2" style="width: 30%">
+              <div class="card-body" style="display: flex; flex-direction: column; height: 100%">
+                <h4 class="card-title">{{i.filetitle}}</h4>
+                <div style="display: flex; justify-content: space-between; height: 10%">
+                  <a href="{{i.file.url}}" download="{{i.file}}" class="mr-2" style="border: 1px solid grey; padding: 5px 5px; border-radius: 5px; text-decoration: none;">Download</a>
+                  <a href="{% url 'delete_file' i.id %}" class="mr-2" name="delete-file" data-fileid="{{ i.id }}" style="border: 1px solid grey; padding: 5px 5px; border-radius: 5px; text-decoration: none;">Delete</a>
+                  <a href="{% url 'generate_qr_code' i.id %}" class="mr-2" src="{% url 'generate_qr_code' i.id %}" download style="border: 1px solid grey; padding: 5px 5px; border-radius: 5px; text-decoration: none;">
+                      Download QR
+                  </a>
+                </div>
+              </div>
+          </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>
       
+    <!-- Upload File Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
           <div class="modal-content">
@@ -71,61 +83,47 @@
                           <input type="file" class="form-control" id="file_name" name="file" />
                           <label for="file_title" class="form-label">Title</label>
                           <input type="text" class="form-control" id="file_title" name="filetitle" />
-  
                           <!-- Hidden field to store the file token -->
                           <input type="hidden" name="file_token" id="fileTokenInput" />
-  
                           <button class="btn btn-outline-success my-3">Upload</button>
                       </div>
                   </form>
               </div>
           </div>
       </div>
-  </div>
+    </div>
+
+      <!-- Add Folder Modal -->
+    <div class="modal fade" id="addFolderModal" tabindex="-1" aria-labelledby="addFolderModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addFolderModalLabel">Add Folder</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="folder_upload_form" action="{% url 'add_folder' %}" method="POST">
+              {% csrf_token %}
+              <div class="mb-3">
+                <label for="folder_name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="folder_name" name="folder_name" />
+                <label for="folder_description" class="form-label">Description</label>
+                <input type="text" class="form-control" id="folder_description" name="folder_description" />
+                <input type="hidden" name="folder_parent_id" value="{{ folderid }}">
+                <button class="btn btn-outline-success my-3">Add Folder</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
   {% endblock content %}
   {% block script %}
-    {% comment %} <script>
-      // Create a WebSocket connection
-      const socket = new WebSocket('ws://127.0.0.1:8000/ws/file_share/');
-
-      socket.onopen = (event) => {
-          // WebSocket connection opened
-          console.log('WebSocket connection opened');
-      };
-
-      socket.onmessage = (event) => {
-          // Handle WebSocket messages here
-          const data = JSON.parse(event.data);
-          if (data.type === 'file_shared') {
-              // Handle file shared event
-              console.log(data.message);
-              // Update the shared files list or display a notification
-          }
-      };
-
-      socket.onclose = (event) => {
-          // WebSocket connection closed
-          console.log('WebSocket connection closed');
-      };
-
-      // JavaScript code for WebSocket connection and file sharing
-      // Add an event listener to each Share button
-      document.querySelectorAll('[data-share-file]').forEach(function (button) {
-        button.addEventListener('click', function (event) {
-            event.preventDefault();
-            const fileId = this.getAttribute('data-share-file');
-            const formId = `share-file-form-${fileId}`;
-            const form = document.getElementById(formId);
-
-            // Send a WebSocket message to share the file
-            socket.send(JSON.stringify({
-                type: 'share_file',
-                file_id: fileId,
-            }));
-        });
-      });
-
-    </script> {% endcomment %}
+    <script>
+      $('#add-folder-button').click(function(event) {
+        return;
+      })
+    </script> 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).on("click", "[name = 'delete-file']", function (event) {
@@ -136,7 +134,7 @@
                     url: "{% url 'delete_file' 0 %}".replace('0', fileId),
                     success: function (data) {
                         if (data.success == true) {
-                            window.location.href = {% url 'folder_list' %}; // Reload the page or update the UI as needed
+                            window.location.href = {% url 'folder_list' %};
                         } else {
                             alert("Delete failed: " + data.message);
                         }
